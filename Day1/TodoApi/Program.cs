@@ -1,39 +1,40 @@
-using Microsoft.EntityFrameworkCore;
-using TodoApi.Models;
+using Serilog;
 
-var connectionString = "server=localhost;database=training_2023;user=root;password=root";
-var serverVersion = ServerVersion.AutoDetect(connectionString);
-var builder = WebApplication.CreateBuilder(args);
-
-
-// Add services to the container.
-
-builder.Services.AddControllers();
-
-builder.Services.AddDbContext<DbsContext>(opt => opt.UseMySql(connectionString, serverVersion));
-
-    
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-
-
-
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+namespace TodoApi
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.Console()
+                .CreateBootstrapLogger();
+            Log.Information("Starting up!");
+
+            try
+            {
+                CreateHostBuilder(args).Build().Run();
+                Log.Information("Stopped cleanly");
+            }
+            catch(Exception ex)
+            {
+                Log.Fatal(ex, "An unhandled exception occured during bootstrapping");
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
+        }
+
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .UseSerilog((context, services, configuration) => configuration
+                    .ReadFrom.Configuration(context.Configuration)
+                    .ReadFrom.Services(services)
+                    .Enrich.FromLogContext())
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                });
+    }
 }
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
