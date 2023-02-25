@@ -23,10 +23,12 @@ namespace TodoApi.Controllers
 
         // GET: api/TodoItems
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TodoItem>>> GetTodoItems()
+        public async Task<ActionResult<IEnumerable<ItemSearchPayload>>> GetTodoItems()
         {
-            var Items =  await _repositoryWrapper.TodoItem.FindAllAsync();
-            return Ok(Items);
+            var todoItems =  await _repositoryWrapper.TodoItem.FindAllAsync();
+            return todoItems
+                .Select(x => ItemToDTO(x))
+                .ToList();
         }
 
         // GET: api/TodoItems/5
@@ -113,14 +115,19 @@ namespace TodoApi.Controllers
             return NoContent();
         }
 
-        
-        
-
-        
 
         private bool ItemExists(long id)
         {
             return _repositoryWrapper.TodoItem.IsExists(id);
         }
+
+        private static ItemSearchPayload ItemToDTO(TodoItem todoItem) =>
+            new ItemSearchPayload
+            {
+                Id = todoItem.Id,
+                ItemNameTerm = todoItem.Name,
+                AddressTerm = todoItem.Address
+            };
+
     }
 }
