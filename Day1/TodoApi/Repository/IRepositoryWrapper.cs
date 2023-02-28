@@ -3,6 +3,7 @@
     public interface IRepositoryWrapper
     {
         ITodoItemRepository TodoItem { get; }
+        IEmployeeRepository Employee {get;}
         
     }
 }

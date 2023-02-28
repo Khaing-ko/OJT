@@ -23,5 +23,18 @@ namespace TodoApi.Repository
                 return oItem;
             }
         }
+        private IEmployeeRepository? oEmp;
+        public IEmployeeRepository Employee
+        {
+            get
+            {
+                if (oEmp == null)
+                {
+                    oEmp = new EmployeeRepository(_repoContext);
+                }
+
+                return oEmp;
+            }
+        }
     }
 }
