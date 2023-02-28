@@ -16,6 +16,5 @@ namespace TodoApi.Models
         [Required]
         [Column("dept_name")]
         public string DeptName { get; set; } = string.Empty;
-
     }
 }

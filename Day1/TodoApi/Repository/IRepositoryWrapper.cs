@@ -4,6 +4,7 @@
     {
         ITodoItemRepository TodoItem { get; }
         IEmployeeRepository Employee {get;}
+        ICustomerRepository Customer { get; }
         
     }
 }

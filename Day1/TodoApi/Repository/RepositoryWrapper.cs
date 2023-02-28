@@ -36,5 +36,19 @@ namespace TodoApi.Repository
                 return oEmp;
             }
         }
+
+        private ICustomerRepository? oCus;
+        public ICustomerRepository Customer
+        {
+            get
+            {
+                if (oCus == null)
+                {
+                    oCus = new CustomerRepository(_repoContext);
+                }
+
+                return oCus;
+            }
+        }
     }
 }

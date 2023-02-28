@@ -16,6 +16,9 @@ namespace TodoApi.Models
         public DbSet<Employee> Employees { get; set; } = null!;
 
         public DbSet<Department> Departments { get; set; } = null!;
+        public DbSet<Customer> Customers {get; set;} = null!;
+
+        public DbSet<CustomerType> CustomerTypes {get; set;} = null!;
 
 
     }
